@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Quizz PPKN</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f6f8fa;
+            color: #222;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            background: #fff;
+            margin: 40px 0;
+            border-radius: 14px;
+            padding: 32px 28px;
+            box-shadow: 0 4px 28px #0001;
+            width: 100%;
+            max-width: 520px;
+        }
+
+        h1,
+        h2 {
+            color: #135ca2;
+        }
+
+        .question {
+            font-size: 1.18em;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .option {
+            background: #f2f5fa;
+            border-radius: 7px;
+            padding: 10px 16px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: background 0.1s, border-color 0.1s;
+            font-size: 1em;
+        }
+
+        .option.selected,
+        .option:hover {
+            background: #d7ecfa;
+            border-color: #5ab2f7;
+        }
+
+        .feedback {
+            margin-top: 6px;
+            font-weight: 500;
+            font-size: 1em;
+        }
+
+        .btn {
+            background: #135ca2;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 24px;
+            font-size: 1em;
+            cursor: pointer;
+            margin-top: 18px;
+            transition: background 0.2s;
+        }
+
+        .btn:disabled {
+            background: #8888;
+            cursor: default;
+        }
+
+        .flag {
+            background: #e7ffe8;
+            color: #106722;
+            border: 1px solid #86e9a6;
+            padding: 18px 16px;
+            border-radius: 10px;
+            font-family: "Fira Mono", monospace;
+            font-size: 1.07em;
+            margin-top: 20px;
+            word-break: break-all;
+            text-align: center;
+        }
+
+        .rsa-info {
+            font-size: 0.95em;
+            color: #13716e;
+            background: #f3fffc;
+            border: 1px solid #aae7e2;
+            padding: 7px 10px;
+            border-radius: 8px;
+            margin: 8px 0 10px 0;
+        }
+
+        .win-message {
+            font-size: 1.5em;
+            color: #106722;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e7ffe8;
+            border-radius: 10px;
+            border: 1px solid #86e9a6;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 22px 6px;
+            }
+
+            .option {
+                padding: 10px 6px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container" id="quiz">
+        <h1>Selamat Datang di Quizz PPKN!</h1>
+        <h2>Materi: Pelanggaran Hak & Kewajiban Warga Negara</h2>
+        <div id="quiz-content"></div>
+    </div>
+    <script>
+        
+        const questions = [
+            {
+                question: "Dasar hukum yang menjadi rujukan warga negara mengenai hak dan kewajiban",
+                options: {
+                    "A": "UU No 23 tahun 2004",
+                    "B": "UU No 23 tahun 2013",
+                    "C": "UU No 23 tahun 2002",
+                    "D": "UU No 23 tahun 2001"
+                }
+            },
+            {
+                question: "Salah satu bentuk pelanggaran terhadap hak warga negara adalah...",
+                options: {
+                    "A": "Menjadi anggota organisasi kemasyarakatan",
+                    "B": "Tidak ikut serta dalam kegiatan pemilu",
+                    "C": "Melarang orang lain menyampaikan pendapat",
+                    "D": "Mendaftarkan diri sebagai wajib pajak"
+                }
+            },
+            {
+                question: "Sikap tidak melaksanakan kewajiban sebagai warga negara dapat menimbulkan...",
+                options: {
+                    "A": "Peningkatan kepercayaan terhadap pemerintah",
+                    "B": "Kesadaran hukum masyarakat",
+                    "C": "Ketertiban umum",
+                    "D": "Pelanggaran terhadap hak warga negara lain"
+                }
+            },
+            {
+                question: "Berikut ini merupakan bentuk pengingkaran terhadap kewajiban sebagai warga negara, kecuali...",
+                options: {
+                    "A": "Tidak membayar pajak",
+                    "B": "Tidak ikut wajib belajar",
+                    "C": "Menjaga keamanan dan ketertiban",
+                    "D": "Tidak menaati peraturan lalu lintas"
+                }
+            },
+            {
+                question: "Hak untuk hidup, tumbuh, dan berkembang dijamin dalam UUD NRI Tahun 1945 Pasal...",
+                options: {
+                    "A": "Pasal 27 ayat (1)",
+                    "B": "Pasal 28A",
+                    "C": "Pasal 29 ayat (2)",
+                    "D": "Pasal 31 ayat (1)"
+                }
+            },
+            {
+                question: "Pelanggaran terhadap hak warga negara biasanya disebabkan oleh...",
+                options: {
+                    "A": "Rendahnya angka pengangguran",
+                    "B": "Tingginya kesadaran hukum",
+                    "C": "Penyalahgunaan kekuasaan",
+                    "D": "Partisipasi aktif masyarakat"
+                }
+            },
+            {
+                question: "Contoh pelanggaran hak yang dilakukan oleh negara adalah...",
+                options: {
+                    "A": "Melarang ormas yang tidak sesuai Pancasila",
+                    "B": "Menghapus pungutan liar",
+                    "C": "Membatasi kebebasan pers tanpa alasan jelas",
+                    "D": "Menyediakan pendidikan gratis"
+                }
+            },
+            {
+                question: "Hak asasi manusia dapat dicabut apabila...",
+                options: {
+                    "A": "Seseorang tidak membayar pajak",
+                    "B": "Mengancam hak orang lain dan kepentingan umum",
+                    "C": "Negara dalam kondisi demokratis",
+                    "D": "Ada perubahan kebijakan presiden"
+                }
+            },
+            {
+                question: "Berikut ini yang bukan merupakan contoh pelanggaran kewajiban warga negara adalah...",
+                options: {
+                    "A": "Tidak menghargai simbol negara",
+                    "B": "Mengikuti musyawarah di desa",
+                    "C": "Tidak ikut serta dalam bela negara",
+                    "D": "Menyebarkan berita bohong"
+                }
+            },
+            {
+                question: "Cara mencegah pelanggaran hak dan kewajiban warga negara adalah...",
+                options: {
+                    "A": "Mengutamakan kepentingan kelompok",
+                    "B": "Memberi sanksi keras pada pelanggar",
+                    "C": "Meningkatkan pendidikan dan kesadaran hukum",
+                    "D": "Membatasi kebebasan warga"
+                }
+            }
+        ];
+
+        
+        
+
+        const answerKeyHash = [
+            "6b23c0d5f35d1b11f9b683f0b0a617355deb11277d91ae091d399c655b87940d", 
+            "6b23c0d5f35d1b11f9b683f0b0a617355deb11277d91ae091d399c655b87940d", 
+            "3f39d5c348e5b79d06e842c114e6cc571583bbf44e4b0ebfda1a01ec05745d43", 
+            "6b23c0d5f35d1b11f9b683f0b0a617355deb11277d91ae091d399c655b87940d", 
+            "df7e70e5021544f4834bbee64a9e3789febc4be81470df629cad6ddb03320a5c", 
+            "6b23c0d5f35d1b11f9b683f0b0a617355deb11277d91ae091d399c655b87940d", 
+            "6b23c0d5f35d1b11f9b683f0b0a617355deb11277d91ae091d399c655b87940d", 
+            "df7e70e5021544f4834bbee64a9e3789febc4be81470df629cad6ddb03320a5c", 
+            "df7e70e5021544f4834bbee64a9e3789febc4be81470df629cad6ddb03320a5c", 
+            "6b23c0d5f35d1b11f9b683f0b0a617355deb11277d91ae091d399c655b87940d", 
+        ];  
+
+
+        
+        
+
+        let current = 0;
+        let score = 0;
+        let answers = [];
+
+        async function sha256(text) {
+            const enc = new TextEncoder();
+            const buf = await crypto.subtle.digest("SHA-256", enc.encode(text));
+            return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        function showQuestion(idx) {
+            const q = questions[idx];
+            const quizDiv = document.getElementById('quiz-content');
+            quizDiv.innerHTML = `
+        <div class="question">Soal ${idx + 1}: ${q.question}</div>
+        <div class="options" id="options">
+          ${Object.entries(q.options).map(([key, val]) =>
+                `<div class="option" data-option="${key}"><b>${key}.</b> ${val}</div>`
+            ).join('')}
+        </div>
+        <div id="feedback" class="feedback"></div>
+        <button class="btn" id="nextBtn" disabled>Lanjut</button>
+      `;
+
+            let selected = null;
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.addEventListener('click', function () {
+                    document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selected = this.dataset.option;
+                    document.getElementById('nextBtn').disabled = false;
+                });
+            });
+
+            document.getElementById('nextBtn').onclick = async function () {
+                let userHash = await sha256(selected.toUpperCase());
+                if (userHash === answerKeyHash[idx]) {
+                    document.getElementById('feedback').textContent = "Benar!";
+                    document.getElementById('feedback').style.color = "#106722";
+                    score++;
+                } else {
+                    document.getElementById('feedback').textContent = `Salah!`;
+                    document.getElementById('feedback').style.color = "#d73a49";
+                }
+                answers.push(selected);
+
+                setTimeout(() => {
+                    current++;
+                    if (current < questions.length) {
+                        showQuestion(current);
+                    } else {
+                        showResult();
+                    }
+                }, 800);
+            };
+        }
+
+        function showResult() {
+            const quizDiv = document.getElementById('quiz-content');
+            quizDiv.innerHTML = `
+                <div style="font-size: 1.3em; margin-bottom: 20px;">
+                    Skor Anda: <strong>${score}/${questions.length}</strong>
+                </div>
+                ${score === questions.length ? '<div class="win-message">SIJAQUIZ{53l4m47_4nd4_73l4h_m3nd4p47k4n_fl49ny4}</div>' : ''}
+                <button class="btn" onclick="location.reload()">Ulangi Quiz</button>
+            `;
+        }
+
+        showQuestion(0);
+    </script>
+</body>
+
+</html>
